@@ -137,11 +137,12 @@ class LspHoverCommand(LspTextCommand):
         formatted = []
         for item in contents:
             value = ""
-            language = mdpopups.get_language_from_view(self.view)
+            language = None
             if isinstance(item, str):
                 value = item
             else:
                 value = item.get("value")
+                language = mdpopups.get_language_from_view(self.view)
             if language:
                 formatted.append("```{}\n{}\n```\n".format(language, value))
             else:
