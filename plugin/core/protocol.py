@@ -112,6 +112,10 @@ class Request:
         return Request("textDocument/definition", params)
 
     @classmethod
+    def typeDefinition(cls, params: dict)  -> 'Request':
+        return Request("textDocument/typeDefinition", params)
+
+    @classmethod
     def rename(cls, params: dict) -> 'Request':
         return Request("textDocument/rename", params)
 

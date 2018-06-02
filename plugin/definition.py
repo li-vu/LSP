@@ -15,8 +15,9 @@ except ImportError:
 
 
 class LspSymbolDefinitionCommand(LspTextCommand):
-    def __init__(self, view):
+    def __init__(self, view, requestFactory=None):
         super().__init__(view)
+        self.requestFactory = requestFactory if requestFactory else Request.definition
 
     def is_enabled(self, event=None):
         if self.has_client_with_capability('definitionProvider'):
@@ -29,7 +30,7 @@ class LspSymbolDefinitionCommand(LspTextCommand):
             pos = get_position(self.view, event)
             document_position = get_document_position(self.view, pos)
             if document_position:
-                request = Request.definition(document_position)
+                request = self.requestFactory(document_position)
                 client.send_request(
                     request, lambda response: self.handle_response(response, pos))
 
@@ -51,3 +52,7 @@ class LspSymbolDefinitionCommand(LspTextCommand):
 
     def want_event(self):
         return True
+
+class LspTypeDefinitionCommand(LspSymbolDefinitionCommand):
+    def __init__(self, view):
+        super().__init__(view, requestFactory=Request.typeDefinition)
