@@ -4,6 +4,7 @@ from urllib.parse import unquote
 from urllib.request import pathname2url
 from urllib.request import url2pathname
 import os
+from os.path import split, join
 
 
 def filename_to_uri(path: str) -> str:
@@ -13,6 +14,8 @@ def filename_to_uri(path: str) -> str:
 def uri_to_filename(uri: str) -> str:
     if os.name == 'nt':
         # url2pathname does not understand %3A (VS Code's encoding forced on all servers :/)
-        return url2pathname(urlparse(uri).path).strip('\\')
+        filename = url2pathname(urlparse(uri).path).strip('\\')
     else:
-        return url2pathname(urlparse(uri).path)
+        filename = url2pathname(urlparse(uri).path)
+    base, name = split(filename)
+    return join(base, name.lower())
